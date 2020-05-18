@@ -9,9 +9,5 @@
       name: ipa-client
       state: present
   - name: Configure IPA client
-    ipaclient:
-      state: present
-      domain: dxc.cloud
-      realm: DXC.CLOUD
-      principal: hostenroll
-      password: "{{ ipaclient_password }}"
+    shell:
+      cmd: ipa-client-install --domain=dxc.cloud --realm=DXC.CLOUD --server ipa.dxc.cloud -p hostenroll -w {{ ipaenroll_pwd } -U
