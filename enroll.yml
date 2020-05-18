@@ -1,0 +1,19 @@
+---
+- name: Playbook to configure IPA clients with username/password
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Install IPA client package
+    package:
+      name: ipa-client
+      state: present
+
+  - name: Configure IPA client
+    ipaclient:
+      state: present
+      domain: dxc.cloud
+      realm: DXC.CLOUD
+      principal: hostenroll
+      password: "{{ ipaenroll_password }}"
+     
