@@ -8,12 +8,3 @@
     package:
       name: ipa-client
       state: present
-
-  - name: Configure IPA client
-    ipaclient:
-      state: present
-      domain: dxc.cloud
-      realm: DXC.CLOUD
-      principal: hostenroll
-      password: "{{ ipaenroll_password }}"
-     
