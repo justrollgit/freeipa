@@ -1,1 +1,1 @@
-- src: ansible-freeipa
+- src: freeipa.ipaclient
