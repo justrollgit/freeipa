@@ -10,4 +10,4 @@
       state: present
   - name: Configure IPA client
     shell:
-      cmd: ipa-client-install --domain=dxc.cloud --realm=DXC.CLOUD --server ipa.dxc.cloud -p hostenroll -w {{ ipaenroll_pwd } -U
+      cmd: ipa-client-install --domain=dxc.cloud --realm=DXC.CLOUD --server ipa.dxc.cloud -p hostenroll -w {{ ipaenroll_pwd }} -U
