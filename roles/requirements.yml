@@ -1,1 +1,1 @@
-- src: freeipa.ansible_freeipa
+- src: ctl-fed-security.freeipa-client
