@@ -4,10 +4,14 @@
   become: true
 
   tasks:
+  - name: Install IPA client package
+    package:
+      name: ipa-client
+      state: present
   - name: Configure IPA client
     ipaclient:
       state: present
       domain: dxc.cloud
       realm: DXC.CLOUD
       principal: hostenroll
-      password: "{{ ipaclient_password }}"
+      password: "{{ ipaenroll_password }}"
