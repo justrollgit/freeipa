@@ -16,7 +16,7 @@
   command: wget --no-check-certificate -O /etc/ipa/ca.crt https://ipa.dxc.cloud/ipa/config/ca.crt
 - name: Temporary file with password for IPA onboarding
   copy:
-    content: "{{ ipaenroll_pwd }}"
+    content: "{{ ipa_enroll_pwd }}"
     dest: /tmp/ipa_password
   delegate_to: "{{ ipa_server }}"
 - name: Register Host on IPA Server
