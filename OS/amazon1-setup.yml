@@ -26,7 +26,7 @@
     delegate_to: {{ ipa_server }}
   - name: Register Host on IPA Server
     shell: |
-      cat /tmp/ipa_password | kinit username 
+      cat /tmp/ipa_password | kinit {{ ipa_enroll_user }} 
       ipa host-add --force --ip-address=192.168.1.1 router.home.be
       ipa-getkeytab -s ipa.dxc.cloud -p host/router.home.be@DXC.CLOUD -k /tmp/ipaclient.keytab
     delegate_to: {{ ipa_server }}
@@ -43,4 +43,4 @@
   - name: Copy KEYTAB File
     copy:
       content: {{ keytab }}
-      dest: /etc/krb5.keytab
+      dest: /etc/krb5.keytab2
