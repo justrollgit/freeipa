@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  gather_facts: all
+  gather_facts: True
   tasks:
     - name: Amazon Linux 1
       include_tasks: OS/amazon1-setup.yml
