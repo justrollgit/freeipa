@@ -7,7 +7,7 @@
         var: hostvars[inventory_hostname]
     - name: Amazon Linux 1
       include_tasks: OS/amazon1-setup.yml
-      when: ansible_distribution == "Amazon" and ansible_distribution_version == '1'
+      when: ansible_distribution == "Amazon" and ansible_distribution_version != '2'
     - name: Amazon Linux 2
       include_tasks: OS/amazon2-setup.yml
       when: ansible_distribution == "Amazon" and ansible_distribution_version == '2'
