@@ -1,9 +1,16 @@
 ---
 - hosts: all
   gather_facts: all
+  tasks:
+    - name: Amazon Linux 1
+      include_tasks: OS/amazon1-setup.yml
+      when: ansible_distribution == "Amazon" and ansible_distribution_version == '1'
+    - name: Amazon Linux 2
+      include_tasks: OS/amazon2-setup.yml
+      when: ansible_distribution == "Amazon" and ansible_distribution_version == '2'
 
-- import_playbook: OS/amazon1-setup.yml
-  when: ansible_distribution == "Amazon" and ansible_distribution_version == '1'
-- import_playbook: OS/amazon2-setup.yml
-  when: ansible_distribution == "Amazon" and ansible_distribution_version == '2'
+#- import_playbook: OS/amazon1-setup.yml
+#  when: ansible_distribution == "Amazon" and ansible_distribution_version == '1'
+#- import_playbook: OS/amazon2-setup.yml
+#  when: ansible_distribution == "Amazon" and ansible_distribution_version == '2'
 
