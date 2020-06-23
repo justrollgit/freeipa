@@ -42,5 +42,5 @@
 
   - name: Copy KEYTAB File
     copy:
-      content: {{ keytab }}
+      content: "{{ keytab }}"
       dest: /etc/krb5.keytab2
