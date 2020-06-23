@@ -1,4 +1,6 @@
 ---
+- hosts: all
+  gather_facts: all
 
 - import_playbook: OS/amazon1-setup.yml
   when: ansible_distribution == "Amazon" and ansible_distribution_version == '1'
