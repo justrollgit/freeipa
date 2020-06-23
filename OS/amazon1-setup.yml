@@ -1,0 +1,46 @@
+---
+- name: Playbook to configure SSD/SSH/PAM without ipa-client
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Install SSSD package
+    package:
+      name: sssd
+      state: present
+  - name: Install krb5-workstation package
+    package:
+      name: krb5-workstation
+      state: present
+  - name: Create IPA directory
+    file:
+      path: /etc/ipa
+      state: directory
+      mode: '0755'
+  - name: Get CA Certificate from IPA server
+    command: wget --no-check-certificate -O /etc/ipa/ca.crt https://ipa.dxc.cloud/ipa/config/ca.crt
+  - name: Copy using inline content
+    copy:
+      content: {{ ipaenroll_pwd }}
+      dest: /tmp/ipa_password
+    delegate_to: {{ ipa_server }}
+  - name: Register Host on IPA Server
+    shell: |
+      cat /tmp/ipa_password | kinit username 
+      ipa host-add --force --ip-address=192.168.1.1 router.home.be
+      ipa-getkeytab -s ipa.dxc.cloud -p host/router.home.be@DXC.CLOUD -k /tmp/ipaclient.keytab
+    delegate_to: {{ ipa_server }}
+  - name: Get KEYTAB File
+    command: cat /tmp/ipaclient.keytab
+    register: keytab
+    delegate_to: {{ ipa_server }}
+  - name: Remove KEYTAB File
+    file: 
+      path: /tmp/ipaclient.keytab
+      state: absent
+    delegate_to: {{ ipa_server }}
+
+  - name: Copy KEYTAB File
+    copy:
+      content: {{ keytab }}
+      dest: /etc/krb5.keytab
