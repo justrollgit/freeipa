@@ -23,7 +23,7 @@
     copy:
       content: {{ ipaenroll_pwd }}
       dest: /tmp/ipa_password
-    delegate_to: {{ ipa_server }}
+    delegate_to: "{{ ipa_server }}"
   - name: Register Host on IPA Server
     shell: |
       cat /tmp/ipa_password | kinit {{ ipa_enroll_user }} 
