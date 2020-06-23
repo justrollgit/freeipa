@@ -14,7 +14,7 @@
     mode: '0755'
 - name: Get CA Certificate from IPA server
   command: wget --no-check-certificate -O /etc/ipa/ca.crt https://ipa.dxc.cloud/ipa/config/ca.crt
-- name: Copy using inline content
+- name: Temporary file with password for IPA onboarding
   copy:
     content: "{{ ipaenroll_pwd }}"
     dest: /tmp/ipa_password
