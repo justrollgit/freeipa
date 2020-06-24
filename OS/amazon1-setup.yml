@@ -40,4 +40,4 @@
     content: "{{ keytab.stdout }}"
     dest: /tmp/ipaclient_{{ ansible_hostname }}.keytab
 - name: Decode KEYTAB File
-  command: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab2
+  shell: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab2
