@@ -23,19 +23,21 @@
   shell: |
     cat /tmp/ipa_password | kinit {{ ipa_enroll_user }} 
     ipa host-add --force --ip-address={{ ansible_default_ipv4 }} {{ ansible_fqdn }}
-    ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient.keytab
+    ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient_{{ ansible_hostname }}.keytab
   delegate_to: "{{ ipa_server }}"
 - name: Get KEYTAB File
-  command: base64 /tmp/ipaclient.keytab
+  command: base64 /tmp/ipaclient_{{ ansible_hostname }}.keytab
   register: keytab
   delegate_to: "{{ ipa_server }}"
 - name: Remove KEYTAB File
   file: 
-    path: /tmp/ipaclient.keytab
+    path: /tmp/ipaclient_{{ ansible_hostname }}.keytab
     state: absent
   delegate_to: "{{ ipa_server }}"
 
 - name: Copy KEYTAB File
   copy:
     content: "{{ keytab.stdout }}"
-    dest: /etc/krb5.keytab2
+    dest: /tmp/ipaclient_{{ ansible_hostname }}.keytab
+- name: Decode KEYTAB File
+  command: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab2
