@@ -26,7 +26,7 @@
     ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient.keytab
   delegate_to: "{{ ipa_server }}"
 - name: Get KEYTAB File
-  command: cat /tmp/ipaclient.keytab | base64
+  command: base64 /tmp/ipaclient.keytab
   register: keytab
   delegate_to: "{{ ipa_server }}"
 - name: Remove KEYTAB File
