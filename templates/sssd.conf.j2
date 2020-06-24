@@ -1,0 +1,36 @@
+[domain/{{ ipa_domain | lower }}]
+
+cache_credentials = True
+krb5_store_password_if_offline = True
+ipa_domain = {{ ipa_domain | lower }}
+id_provider = ipa
+auth_provider = ipa
+access_provider = ipa
+ldap_tls_cacert = /etc/ipa/ca.crt
+ipa_hostname = {{ ansible_fqdn }}
+chpass_provider = ipa
+ipa_server = _srv_, {{ ipa_server }}
+dns_discovery_domain = {{ ipa_domain | lower }}
+[sssd]
+services = nss, sudo, pam, ssh
+
+domains = {{ ipa_domain | lower }}
+[nss]
+homedir_substring = /home
+
+[pam]
+
+[sudo]
+
+[autofs]
+
+[ssh]
+
+[pac]
+
+[ifp]
+
+[secrets]
+
+[session_recording]
+

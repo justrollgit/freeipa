@@ -1,0 +1,35 @@
+includedir /etc/krb5.conf.d/
+includedir /var/lib/sss/pubconf/krb5.include.d/
+
+[libdefaults]
+  default_realm = {{ ipa_domain | upper }}
+  dns_lookup_realm = false
+  dns_lookup_kdc = false
+  rdns = false
+  dns_canonicalize_hostname = false
+  ticket_lifetime = 24h
+  forwardable = true
+  udp_preference_limit = 0
+  default_ccache_name = KEYRING:persistent:%{uid}
+
+
+[realms]
+  {{ ipa_domain }} = {
+    kdc = {{ ipa_server }}:88
+    master_kdc = {{ ipa_server }}:88
+    admin_server = {{ ipa_server }}:749
+    kpasswd_server = {{ ipa_server }}:464
+    default_domain = {{ ipa_domain | lower }}
+    pkinit_anchors = FILE:/etc/ipa/ca.crt
+    pkinit_pool = FILE:/etc/ipa/ca.crt
+
+  }
+
+
+[domain_realm]
+  .{{ ipa_domain | lower }} = {{ ipa_domain | upper }}
+  {{ ipa_domain | lower }} = {{ ipa_domain | upper }}
+  {{ ansible_fqdn }} = {{ ipa_domain | upper }}
+  {{ ansible_hostname }} = {{ ipa_domain | upper }}
+  .{{ ansible_domain }} = {{ ipa_domain | upper }}
+  {{ ansible_domain }} = {{ ipa_domain | upper }}

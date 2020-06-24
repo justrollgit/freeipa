@@ -40,4 +40,34 @@
     content: "{{ keytab.stdout }}"
     dest: /tmp/ipaclient_{{ ansible_hostname }}.keytab
 - name: Decode KEYTAB File
-  shell: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab2
+  shell: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab
+- name: Access right KEYTAB File
+  file:
+    path: /etc/krb5.keytab
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Configure /etc/krb5.conf
+  template:
+    src: /templates/krb5.conf.j2
+    dest: /etc/krb5.conf2
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Configure /etc/sssd/sssd.conf
+  template:
+    src: /templates/sssd.conf.j2
+    dest: /etc/sssd/sssd.conf2
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Configure /etc/nsswitch.conf
+  template:
+    src: /templates/nsswitch.conf.j2
+    dest: /etc/nsswitch.conf2
+    owner: root
+    group: root
+    mode: '0600'
