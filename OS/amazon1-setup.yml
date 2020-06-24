@@ -13,7 +13,7 @@
     state: directory
     mode: '0755'
 - name: Get CA Certificate from IPA server
-  command: wget --no-check-certificate -O /etc/ipa/ca.crt https://ipa.dxc.cloud/ipa/config/ca.crt
+  command: wget --no-check-certificate -O /etc/ipa/ca.crt https://{{ ipa_server }}/ipa/config/ca.crt
 - name: Temporary file with password for IPA onboarding
   copy:
     content: "{{ ipa_enroll_pwd }}"
@@ -22,8 +22,8 @@
 - name: Register Host on IPA Server
   shell: |
     cat /tmp/ipa_password | kinit {{ ipa_enroll_user }} 
-    ipa host-add --force --ip-address=192.168.1.1 router.home.be
-    ipa-getkeytab -s ipa.dxc.cloud -p host/router.home.be@DXC.CLOUD -k /tmp/ipaclient.keytab
+    ipa host-add --force --ip-address={{ ansible_default_ipv4 }} {{ ansible_fqdn }}
+    ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient.keytab
   delegate_to: "{{ ipa_server }}"
 - name: Get KEYTAB File
   command: cat /tmp/ipaclient.keytab
@@ -37,5 +37,5 @@
 
 - name: Copy KEYTAB File
   copy:
-    content: "{{ keytab }}"
+    content: "{{ keytab.stdout }}"
     dest: /etc/krb5.keytab2
