@@ -36,26 +36,26 @@
     ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient_{{ ansible_hostname }}.keytab
   delegate_to: "{{ ipa_server }}"
 
-- name: Get KEYTAB File
+- name: Get keytab file (base64 encoded) from IPA server
   command: base64 /tmp/ipaclient_{{ ansible_hostname }}.keytab
   register: keytab
   delegate_to: "{{ ipa_server }}"
 
-- name: Remove KEYTAB File
+- name: Remove keytab file from IPA server
   file: 
     path: /tmp/ipaclient_{{ ansible_hostname }}.keytab
     state: absent
   delegate_to: "{{ ipa_server }}"
 
-- name: Copy KEYTAB File
+- name: Put keytab file on client server
   copy:
     content: "{{ keytab.stdout }}"
     dest: /tmp/ipaclient_{{ ansible_hostname }}.keytab
 
-- name: Decode KEYTAB File
+- name: Decode keytab file on client server
   shell: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab
 
-- name: Access right KEYTAB File
+- name: Set access right on keytab file
   file:
     path: /etc/krb5.keytab
     owner: root
@@ -93,14 +93,14 @@
 - name: Enable PAM
   shell: authconfig --enablesssd --enablesssdauth --enablecachecreds --updateall
 
-- name: Ensure SELinux is set to enforcing mode
+- name: Configure sshd (AuthorizedKeysCommand)
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^AuthorizedKeysCommand '
     line: AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
   notify: Restart service sshd
 
-- name: Ensure SELinux is set to enforcing mode
+- name: Configure sshd (AuthorizedKeysCommandUser)
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^AuthorizedKeysCommandUser '
