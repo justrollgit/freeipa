@@ -79,6 +79,7 @@
     group: root
     mode: '0600'
     backup: True
+  notify: Restart service sssd
 
 - name: Configure /etc/nsswitch.conf
   template:
@@ -97,20 +98,11 @@
     path: /etc/ssh/sshd_config
     regexp: '^AuthorizedKeysCommand '
     line: AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+  notify: Restart service sshd
 
 - name: Ensure SELinux is set to enforcing mode
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^AuthorizedKeysCommandUser '
     line: AuthorizedKeysCommandUser nobody
-
-- name: Restart service sshd
-  service:
-    name: sshd
-    state: restarted
-
-- name: Restart service sssd
-  service:
-    name: sssd
-    state: restarted
-    enabled: True
+  notify: Restart service sshd
