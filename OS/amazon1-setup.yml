@@ -3,32 +3,44 @@
   package:
     name: sssd
     state: present
+
 - name: Install krb5-workstation package
   package:
     name: krb5-workstation
     state: present
+
 - name: Create IPA directory
   file:
     path: /etc/ipa
     state: directory
     mode: '0755'
+
 - name: Get CA Certificate from IPA server
-  command: wget --no-check-certificate -O /etc/ipa/ca.crt https://{{ ipa_server }}/ipa/config/ca.crt
+  get_url:
+    url: https://{{ ipa_server }}/ipa/config/ca.crt
+    dest: /etc/ipa/ca.crt
+    mode: '0644'
+    validate_certs: False
+    force: True
+
 - name: Temporary file with password for IPA onboarding
   copy:
     content: "{{ ipa_enroll_pwd }}"
     dest: /tmp/ipa_password
   delegate_to: "{{ ipa_server }}"
+
 - name: Register Host on IPA Server
   shell: |
     cat /tmp/ipa_password | kinit {{ ipa_enroll_user }} 
     ipa host-add --force --ip-address={{ ansible_default_ipv4 }} {{ ansible_fqdn }}
     ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient_{{ ansible_hostname }}.keytab
   delegate_to: "{{ ipa_server }}"
+
 - name: Get KEYTAB File
   command: base64 /tmp/ipaclient_{{ ansible_hostname }}.keytab
   register: keytab
   delegate_to: "{{ ipa_server }}"
+
 - name: Remove KEYTAB File
   file: 
     path: /tmp/ipaclient_{{ ansible_hostname }}.keytab
@@ -39,8 +51,10 @@
   copy:
     content: "{{ keytab.stdout }}"
     dest: /tmp/ipaclient_{{ ansible_hostname }}.keytab
+
 - name: Decode KEYTAB File
   shell: base64 -d /tmp/ipaclient_{{ ansible_hostname }}.keytab > /etc/krb5.keytab
+
 - name: Access right KEYTAB File
   file:
     path: /etc/krb5.keytab
