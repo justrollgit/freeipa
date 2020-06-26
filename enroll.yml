@@ -4,7 +4,7 @@
   become: true
   handlers:
     - name: Amazon Linux 1 Handlers
-      include_tasks: OS/amazon1-handlers.yml
+      import_tasks: OS/amazon1-handlers.yml
       when: ansible_distribution == "Amazon" and ansible_distribution_version != '2'
   tasks:
     #- name: "Ansible | List all known variables and facts"
