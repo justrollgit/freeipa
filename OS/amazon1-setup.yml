@@ -32,7 +32,7 @@
 - name: Register Host on IPA Server
   shell: |
     cat /tmp/ipa_password | kinit {{ ipa_enroll_user }} 
-    ipa host-add --force --ip-address={{ ansible_default_ipv4 }} {{ ansible_fqdn }}
+    ipa host-add --force --ip-address={{ ansible_default_ipv4.address }} {{ ansible_fqdn }}
     ipa-getkeytab -s {{ ipa_server }} -p host/{{ ansible_fqdn }}@{{ ipa_domain }} -k /tmp/ipaclient_{{ ansible_hostname }}.keytab
   delegate_to: "{{ ipa_server }}"
 
