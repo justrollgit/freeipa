@@ -6,8 +6,8 @@
 - name: Configure IPA client with invalid FQDN
   shell:
      cmd: ipa-client-install --domain={{ ipa_domain | lower }} --realm={{ ipa_domain | upper }} --server {{ ipa_server }} -p {{ ipa_enroll_user }} -w {{ ipa_enroll_pwd }} -U -N --mkhomedir --hostname {{ ansible_hostname }}.{{ ec2_region }}.compute.internal
-     when: ansible_facts['ansible_hostname'] == ansible_facts['ansible_fqdn']
+  when: ansible_facts['ansible_hostname'] == ansible_facts['ansible_fqdn']
 - name: Configure IPA client with valid FQDN
   shell:
      cmd: ipa-client-install --domain={{ ipa_domain | lower }} --realm={{ ipa_domain | upper }} --server {{ ipa_server }} -p {{ ipa_enroll_user }} -w {{ ipa_enroll_pwd }} -U -N --mkhomedir
-     when: ansible_facts['ansible_hostname'] != ansible_facts['ansible_fqdn']
+  when: ansible_facts['ansible_hostname'] != ansible_facts['ansible_fqdn']

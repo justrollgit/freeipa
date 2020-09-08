@@ -11,9 +11,9 @@
       debug:
         var: hostvars[inventory_hostname]
     - name: Amazon Linux 1
-      import_tasks: OS/amazon1-setup.yml
+      include_tasks: OS/amazon1-setup.yml
       when: ansible_distribution == "Amazon" and ansible_distribution_version != '2'
     - name: Amazon Linux 2
-      import_tasks: OS/amazon2-setup.yml
+      include_tasks: OS/amazon2-setup.yml
       when: ansible_distribution == "Amazon" and ansible_distribution_version == '2'
 
