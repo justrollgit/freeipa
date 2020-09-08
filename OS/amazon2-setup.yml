@@ -5,4 +5,4 @@
     state: present
 - name: Configure IPA client
   shell:
-    cmd: ipa-client-install --domain={{ ipa_domain | lower }} --realm={{ ipa_domain | upper }} --server {{ ipa_server }} -p {{ ipa_enroll_user }} -w {{ ipa_enroll_pwd }} -U -N
+    cmd: ipa-client-install --domain={{ ipa_domain | lower }} --realm={{ ipa_domain | upper }} --server {{ ipa_server }} -p {{ ipa_enroll_user }} -w "{{ ipa_enroll_pwd }}" -U -N
