@@ -16,4 +16,6 @@
     - name: Amazon Linux 2
       include_tasks: OS/amazon2-setup.yml
       when: ansible_distribution == "Amazon" and ansible_distribution_version == '2'
-
+    - name: RHEL7
+      include_tasks: OS/rhel7-setup.yml
+      when: (ansible_distribution == "RedHat" or ansible_distribution == "Red Hat Enterprise Linux") and ansible_distribution_version == '7'
