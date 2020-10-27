@@ -29,9 +29,11 @@
 
 - name: Load SELinux policy package
   command: semodule -i /tmp/oddjob_mkhomedir.pp
-  notify: "restart services"
+  notify: "restart oddjobd"
 
 - name: Remove temporary files
   file: path=/tmp/oddjob_mkhomedir.*
         state=absent
-        
+
+#- name: Restart DBUS
+#  command: systemctl restart dbus.service dbus-org.freedesktop.login1.service
