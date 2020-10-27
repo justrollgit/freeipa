@@ -11,3 +11,41 @@
   shell:
      cmd: ipa-client-install --domain={{ ipa_domain | lower }} --realm={{ ipa_domain | upper }} --server {{ ipa_server }} -p {{ ipa_enroll_user }} -w {{ ipa_enroll_pwd }} -U -N --mkhomedir
   when: ansible_hostname != ansible_fqdn
+
+# BUG in RHEL7 / SELINUX
+- name: Remove SELinux policy package
+  command: semodule -r oddjob_mkhomedir
+  failed_when: false
+
+- name: Copy SELinux type enforcement file
+  copy: src=templates/oddjob_mkhomedir.te
+        dest=/tmp/
+
+- name: Compile SELinux module file
+  command: checkmodule -M -m -o /tmp/oddjob_mkhomedir.mod /tmp/oddjob_mkhomedir.te
+
+- name: Build SELinux policy package
+  command: semodule_package -o /tmp/oddjob_mkhomedir.pp -m /tmp/oddjob_mkhomedir.mod
+
+- name: Load SELinux policy package
+  command: semodule -i /tmp/oddjob_mkhomedir.pp
+  notify: "restart services"
+
+- name: Remove temporary files
+  file: path=/tmp/oddjob_mkhomedir.*
+        state=absent
+
+# Restart services
+
+#- dbus.service
+#- dbus-org.freedesktop.login1.service
+#- oddjobd.service
+
+  # To make sure that home dir is created
+  # restart following services
+#  [‎30/‎09/‎2020 15:05]  Gillis, Johan:  
+#ik heb wel de volgende services moeten herstarten zodat de home dir gemaakt wordt
+#systemctl restart messagebus 
+#systemctl restart oddjobd.service 
+#beginnen met messagebus en dan ddjobd service
+ 

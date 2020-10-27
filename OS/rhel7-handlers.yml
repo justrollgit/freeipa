@@ -1,0 +1,21 @@
+---
+- name: Restart service dbus
+  service:
+    name: dbus.service
+    state: restarted
+  listen: "restart services"
+    
+- name: Restart service dbus.freedesktop
+  service:
+    name: dbus-org.freedesktop.login1.service
+    state: restarted
+    enabled: True
+  listen: "restart services"
+
+- name: Restart service oddjobd
+  service:
+    name: oddjobd.service
+    state: restarted
+    enabled: True
+  listen: "restart services"
+    
