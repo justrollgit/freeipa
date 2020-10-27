@@ -34,18 +34,4 @@
 - name: Remove temporary files
   file: path=/tmp/oddjob_mkhomedir.*
         state=absent
-
-# Restart services
-
-#- dbus.service
-#- dbus-org.freedesktop.login1.service
-#- oddjobd.service
-
-  # To make sure that home dir is created
-  # restart following services
-#  [‎30/‎09/‎2020 15:05]  Gillis, Johan:  
-#ik heb wel de volgende services moeten herstarten zodat de home dir gemaakt wordt
-#systemctl restart messagebus 
-#systemctl restart oddjobd.service 
-#beginnen met messagebus en dan ddjobd service
- 
+        
